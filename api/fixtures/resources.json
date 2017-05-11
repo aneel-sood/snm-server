@@ -1,0 +1,200 @@
+[
+  {
+    "model": "api.provider",
+    "pk": 1,
+    "fields": {
+      "first_name": "Joan",
+      "last_name": "Dowek",
+      "email": "jd@gmail.com"
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "interpreter",
+      "details": {
+        "source_lang": "AR",
+        "target_lang": "EN",
+        "professional": true
+      },
+      "provider": 1
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "interpreter",
+      "details": {
+        "source_lang": "EN",
+        "target_lang": "AR",
+        "professional": true
+      },
+      "provider": 1
+    }
+  },
+  {
+    "model": "api.provider",
+    "pk": 2,
+    "fields": {
+      "first_name": "Zukhra",
+      "last_name": "Rozieva",
+      "email": "zrozieva@gmail.com"
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "interpreter",
+      "details": {
+        "source_lang": "FR",
+        "target_lang": "EN",
+        "professional": false
+      },
+      "provider": 2
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "interpreter",
+      "details": {
+        "source_lang": "EN",
+        "target_lang": "FR",
+        "professional": false
+      },
+      "provider": 2
+    }
+  },
+  {
+    "model": "api.provider",
+    "pk": 3,
+    "fields": {
+      "first_name": "Dana",
+      "last_name": "Nanoff",
+      "email": "nanoff@hotmail.com"
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "interpreter",
+      "details": {
+        "source_lang": "AR",
+        "target_lang": "FR",
+        "professional": false
+      },
+      "provider": 3
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "interpreter",
+      "details": {
+        "source_lang": "FR",
+        "target_lang": "AR",
+        "professional": false
+      },
+      "provider": 3
+    }
+  },
+  {
+    "model": "api.provider",
+    "pk": 4,
+    "fields": {
+      "first_name": "Cheng",
+      "last_name": "Yan",
+      "email": "chengy@yan.org"
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "interpreter",
+      "details": {
+        "source_lang": "FR",
+        "target_lang": "RU",
+        "professional": false
+      },
+      "provider": 4
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "interpreter",
+      "details": {
+        "source_lang": "RU",
+        "target_lang": "FR",
+        "professional": false
+      },
+      "provider": 4
+    }
+  },
+  {
+    "model": "api.provider",
+    "pk": 5,
+    "fields": {
+      "first_name": "Laurel",
+      "last_name": "Towes",
+      "email": "laurel@towes.com"
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "interpreter",
+      "details": {
+        "source_lang": "SP",
+        "target_lang": "EN",
+        "professional": true
+      },
+      "provider": 5
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "interpreter",
+      "details": {
+        "source_lang": "EN",
+        "target_lang": "SP",
+        "professional": true
+      },
+      "provider": 5
+    }
+  },
+  {
+    "model": "api.provider",
+    "pk": 6,
+    "fields": {
+      "first_name": "Zukhra",
+      "last_name": "Rozieva",
+      "email": "zrozieva@gmail.com"
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "interpreter",
+      "details": {
+        "source_lang": "GK",
+        "target_lang": "IT",
+        "professional": false
+      },
+      "provider": 6
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "interpreter",
+      "details": {
+        "source_lang": "IT",
+        "target_lang": "GK",
+        "professional": false
+      },
+      "provider": 6
+    }
+  }
+]
