@@ -7,9 +7,10 @@ from api.models import Resource
 from api.serializers import ResourceSerializer
 
 @csrf_exempt
-def interpreter_list(request):
+def resources(request):
     if request.method == 'GET':
-        resources = Resource.objects.all()
+        type = request.GET.get('type', '')
+        resources = Resource.objects.filter(type=type)
         serializer = ResourceSerializer(resources, many=True)
         return JsonResponse(serializer.data, safe=False)
 
