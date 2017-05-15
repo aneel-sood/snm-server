@@ -196,5 +196,203 @@
       },
       "provider": 6
     }
+  },
+  {
+    "model": "api.provider",
+    "pk": 7,
+    "fields": {
+      "first_name": "Black",
+      "last_name": "Francis",
+      "email": "frank@gmail.com"
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "translator",
+      "details": {
+        "source_lang": "AR",
+        "target_lang": "EN",
+        "professional": true
+      },
+      "provider": 7
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "translator",
+      "details": {
+        "source_lang": "EN",
+        "target_lang": "AR",
+        "professional": true
+      },
+      "provider": 7
+    }
+  },
+  {
+    "model": "api.provider",
+    "pk": 8,
+    "fields": {
+      "first_name": "Jon",
+      "last_name": "Cougar",
+      "email": "melon@gmail.com"
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "translator",
+      "details": {
+        "source_lang": "FR",
+        "target_lang": "EN",
+        "professional": false
+      },
+      "provider": 8
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "translator",
+      "details": {
+        "source_lang": "EN",
+        "target_lang": "FR",
+        "professional": false
+      },
+      "provider": 8
+    }
+  },
+  {
+    "model": "api.provider",
+    "pk": 9,
+    "fields": {
+      "first_name": "Fancy",
+      "last_name": "Pants",
+      "email": "hemming_f@hotmail.com"
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "translator",
+      "details": {
+        "source_lang": "AR",
+        "target_lang": "FR",
+        "professional": false
+      },
+      "provider": 9
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "translator",
+      "details": {
+        "source_lang": "FR",
+        "target_lang": "AR",
+        "professional": false
+      },
+      "provider": 9
+    }
+  },
+  {
+    "model": "api.provider",
+    "pk": 10,
+    "fields": {
+      "first_name": "Gideon",
+      "last_name": "Saul",
+      "email": "giddy@mail.org"
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "translator",
+      "details": {
+        "source_lang": "FR",
+        "target_lang": "RU",
+        "professional": false
+      },
+      "provider": 10
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "translator",
+      "details": {
+        "source_lang": "RU",
+        "target_lang": "FR",
+        "professional": false
+      },
+      "provider": 10
+    }
+  },
+  {
+    "model": "api.provider",
+    "pk": 11,
+    "fields": {
+      "first_name": "Forever",
+      "last_name": "Street",
+      "email": "f_street@down.com"
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "translator",
+      "details": {
+        "source_lang": "SP",
+        "target_lang": "EN",
+        "professional": true
+      },
+      "provider": 11
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "translator",
+      "details": {
+        "source_lang": "EN",
+        "target_lang": "SP",
+        "professional": true
+      },
+      "provider": 11
+    }
+  },
+  {
+    "model": "api.provider",
+    "pk": 12,
+    "fields": {
+      "first_name": "Road",
+      "last_name": "Runner",
+      "email": "meep_meep@gmail.com"
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "translator",
+      "details": {
+        "source_lang": "GK",
+        "target_lang": "IT",
+        "professional": false
+      },
+      "provider": 12
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "translator",
+      "details": {
+        "source_lang": "IT",
+        "target_lang": "GK",
+        "professional": false
+      },
+      "provider": 12
+    }
   }
 ]
