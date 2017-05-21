@@ -2,15 +2,22 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
-
+from json import loads
 from api.models import Resource
 from api.serializers import ResourceSerializer
+from django.db.models import Q
 
 @csrf_exempt
 def resources(request):
     if request.method == 'GET':
         type = request.GET.get('type', '')
-        resources = Resource.objects.filter(type=type)
+        details = loads(request.GET.get('details', '{}'))
+        
+        q_objects = Q()
+        for param_name, value in details.items():
+          q_objects.add(Q(**{'{0}__{1}'.format('details', param_name): value}), Q.AND)
+
+        resources = Resource.objects.filter(type=type).filter(q_objects)
         serializer = ResourceSerializer(resources, many=True)
         return JsonResponse(serializer.data, safe=False)
 
