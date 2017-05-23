@@ -394,5 +394,100 @@
       },
       "provider": 12
     }
+  },
+  {
+    "model": "api.provider",
+    "pk": 13,
+    "fields": {
+      "first_name": "Muhammad",
+      "last_name": "Ali",
+      "email": "the_greatest@box.com"
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "dentist",
+      "details": {
+        "language_of_service": "AR"
+      },
+      "provider": 13
+    }
+  },
+  {
+    "model": "api.provider",
+    "pk": 14,
+    "fields": {
+      "first_name": "Tim",
+      "last_name": "Denton",
+      "email": "td@gmail.com"
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "dentist",
+      "details": {
+        "language_of_service": "FR"
+      },
+      "provider": 14
+    }
+  },
+  {
+    "model": "api.provider",
+    "pk": 15,
+    "fields": {
+      "first_name": "Georgia",
+      "last_name": "Lebel",
+      "email": "george@kingdental.com"
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "dentist",
+      "details": {
+        "language_of_service": "FR"
+      },
+      "provider": 15
+    }
+  },
+  {
+    "model": "api.provider",
+    "pk": 16,
+    "fields": {
+      "first_name": "Laura",
+      "last_name": "Goldfarb",
+      "email": "goldie@finchurst.com"
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "dentist",
+      "details": {
+        "language_of_service": "RU"
+      },
+      "provider": 16
+    }
+  },
+  {
+    "model": "api.provider",
+    "pk": 17,
+    "fields": {
+      "first_name": "Dolores",
+      "last_name": "Greko",
+      "email": "sue@gmail.com"
+    }
+  },
+  {
+    "model": "api.resource",
+    "fields": {
+      "type": "dentist",
+      "details": {
+        "language_of_service": "GK"
+      },
+      "provider": 17
+    }
   }
 ]
