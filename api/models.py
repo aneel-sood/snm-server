@@ -9,4 +9,4 @@ class Provider(models.Model):
 class Resource(models.Model):
   type = models.CharField(max_length=50)
   details = JSONField(default=dict)
-  provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
+  provider = models.ForeignKey(Provider, related_name='resources', on_delete=models.CASCADE)
