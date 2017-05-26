@@ -1,0 +1,20 @@
+[
+  {
+    "model": "api.client",
+    "pk": 1,
+    "fields": {
+      "first_name": "Hala",
+      "last_name": "Abdein",
+      "email": "abedin_h@gmail.com"
+    }
+  },
+  {
+    "model": "api.client",
+    "pk": 2,
+    "fields": {
+      "first_name": "Hasan",
+      "last_name": "Abdein",
+      "email": "hasana@gmail.com"
+    }
+  }
+]
