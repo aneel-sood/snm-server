@@ -28,6 +28,13 @@ def clients(request):
       serializer = ClientSerializer(clients, many=True)
       return JsonResponse(serializer.data, safe=False)
 
+@csrf_exempt
+def client(request, pk):
+    if request.method == 'GET':
+      client = Client.objects.get(pk=pk)
+      serializer = ClientSerializer(client)
+      return JsonResponse(serializer.data, safe=False)
+
 # @csrf_exempt
 # def resources(request):
 #     if request.method == 'GET':
