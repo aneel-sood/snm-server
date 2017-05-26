@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Provider, Resource, Client
+from api.models import Provider, Resource, Client, Need
 
 class ResourceSerializer(serializers.ModelSerializer):
   class Meta:
@@ -12,7 +12,13 @@ class ProviderSerializer(serializers.ModelSerializer):
     model = Provider
     fields = ('id', 'first_name', 'last_name', 'email', 'resources')
 
+class NeedSerializer(serializers.ModelSerializer):
+  class Meta:
+      model = Need
+      fields = ('id', 'type', 'requirements', 'status')
+
 class ClientSerializer(serializers.ModelSerializer):
+  needs = NeedSerializer(many=True)
   class Meta:
     model = Provider
-    fields = ('id', 'first_name', 'last_name', 'email')
+    fields = ('id', 'first_name', 'last_name', 'email', 'needs')
