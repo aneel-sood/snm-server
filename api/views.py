@@ -3,22 +3,50 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from json import loads
-from api.models import Resource
-from api.serializers import ResourceSerializer
+from api.models import Resource, Provider, Client
+from api.serializers import ResourceSerializer, ProviderSerializer, ClientSerializer
 from django.db.models import Q
 
 @csrf_exempt
-def resources(request):
+def providers(request):
     if request.method == 'GET':
       params = loads(request.GET.get('params', '{}'))
       
       q_objects = Q()
       for param_name, value in params['details'].items():
-        q_objects.add(Q(**{'{0}__{1}'.format('details', param_name): value}), Q.AND)
+        q_objects.add(Q(**{'{0}__{1}__{2}'.format('resources', 'details', param_name): value}), Q.AND)
 
-      resources = Resource.objects.filter(type=params['type']).filter(q_objects)
-      serializer = ResourceSerializer(resources, many=True)
+      providers = Provider.objects.filter(resources__type=params['resource_type']).filter(q_objects).distinct()
+
+      serializer = ProviderSerializer(providers, many=True)
       return JsonResponse(serializer.data, safe=False)
+
+@csrf_exempt
+def clients(request):
+    if request.method == 'GET':
+      clients = Client.objects.all()
+      serializer = ClientSerializer(clients, many=True)
+      return JsonResponse(serializer.data, safe=False)
+
+@csrf_exempt
+def client(request, pk):
+    if request.method == 'GET':
+      client = Client.objects.get(pk=pk)
+      serializer = ClientSerializer(client)
+      return JsonResponse(serializer.data, safe=False)
+
+# @csrf_exempt
+# def resources(request):
+#     if request.method == 'GET':
+#       params = loads(request.GET.get('params', '{}'))
+      
+#       q_objects = Q()
+#       for param_name, value in params['details'].items():
+#         q_objects.add(Q(**{'{0}__{1}'.format('details', param_name): value}), Q.AND)
+
+#       resources = Resource.objects.filter(type=params['type']).filter(q_objects)
+#       serializer = ResourceSerializer(resources, many=True)
+#       return JsonResponse(serializer.data, safe=False)
 
     # elif request.method == 'POST':
     #     data = JSONParser().parse(request)

@@ -1,0 +1,42 @@
+[
+  {
+    "model": "api.client",
+    "pk": 1,
+    "fields": {
+      "first_name": "Hala",
+      "last_name": "Abdein",
+      "email": "abedin_h@gmail.com"
+    }
+  },
+  {
+    "model": "api.need",
+    "fields": {
+      "type": "interpreter",
+      "requirements": {
+        "source_lang": "AR",
+        "target_lang": "EN",
+        "professional": false
+      },
+      "client": 1
+    }
+  },
+  {
+    "model": "api.client",
+    "pk": 2,
+    "fields": {
+      "first_name": "Hasan",
+      "last_name": "Abdein",
+      "email": "hasana@gmail.com"
+    }
+  },
+  {
+    "model": "api.need",
+    "fields": {
+      "type": "dentist",
+      "requirements": {
+        "language_of_service": "GK"
+      },
+      "client": 2
+    }
+  }
+]
