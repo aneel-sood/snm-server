@@ -57,6 +57,11 @@ def client_need(request, client_id, pk):
     serializer = NeedSerializer(need)
     return JsonResponse(serializer.data, safe=False)
 
+  elif request.method == 'DELETE':
+    need = Need.objects.filter(client_id = client_id, pk=pk).first()
+    need.delete()
+    return JsonResponse({}, status=200)
+
 # need = Need.objects.filter(client_id = client_id, pk=pk)
 # if need:
 #   return HttpResponse("<h5>if</h5>")
