@@ -46,7 +46,7 @@ def client_needs(request, client_id):
 @csrf_exempt
 def client_need(request, client_id, pk):
   # GET returns the specific client need
-  if request.method == 'POST': # POST updates the specified need
+  if request.method == 'PUT': # POST updates the specified need
     body_unicode = request.body.decode('utf-8')
     params = loads(body_unicode)
       
@@ -56,6 +56,11 @@ def client_need(request, client_id, pk):
     need.save()
     serializer = NeedSerializer(need)
     return JsonResponse(serializer.data, safe=False)
+
+  elif request.method == 'DELETE':
+    need = Need.objects.filter(client_id = client_id, pk=pk).first()
+    need.delete()
+    return JsonResponse({}, status=200)
 
 # need = Need.objects.filter(client_id = client_id, pk=pk)
 # if need:
