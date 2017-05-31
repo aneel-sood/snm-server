@@ -3,37 +3,71 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from json import loads
-from api.models import Resource, Provider, Client
-from api.serializers import ResourceSerializer, ProviderSerializer, ClientSerializer
+from api.models import *
+from api.serializers import *
 from django.db.models import Q
 
 @csrf_exempt
 def providers(request):
-    if request.method == 'GET':
-      params = loads(request.GET.get('params', '{}'))
-      
-      q_objects = Q()
-      for param_name, value in params['details'].items():
-        q_objects.add(Q(**{'{0}__{1}__{2}'.format('resources', 'details', param_name): value}), Q.AND)
+  if request.method == 'GET':
+    params = loads(request.GET.get('params', '{}'))
+    
+    q_objects = Q()
+    for param_name, value in params['details'].items():
+      q_objects.add(Q(**{'{0}__{1}__{2}'.format('resources', 'details', param_name): value}), Q.AND)
 
-      providers = Provider.objects.filter(resources__type=params['resource_type']).filter(q_objects).distinct()
+    providers = Provider.objects.filter(resources__type=params['resource_type']).filter(q_objects).distinct()
 
-      serializer = ProviderSerializer(providers, many=True)
-      return JsonResponse(serializer.data, safe=False)
+    serializer = ProviderSerializer(providers, many=True)
+    return JsonResponse(serializer.data, safe=False)
 
 @csrf_exempt
 def clients(request):
-    if request.method == 'GET':
-      clients = Client.objects.all()
-      serializer = ClientSerializer(clients, many=True)
-      return JsonResponse(serializer.data, safe=False)
+  if request.method == 'GET':
+    clients = Client.objects.all()
+    serializer = ClientSerializer(clients, many=True)
+    return JsonResponse(serializer.data, safe=False)
 
 @csrf_exempt
 def client(request, pk):
-    if request.method == 'GET':
-      client = Client.objects.get(pk=pk)
-      serializer = ClientSerializer(client)
-      return JsonResponse(serializer.data, safe=False)
+  if request.method == 'GET':
+    client = Client.objects.get(pk=pk)
+    serializer = ClientSerializer(client)
+    return JsonResponse(serializer.data, safe=False)
+
+@csrf_exempt
+def client_needs(request, client_id):
+  # GET returns all needs for the specified Client
+  if request.method == 'POST': # POST creates a new need for the specified Client   
+    need = Need.objects.create(client_id=client_id)
+    serializer = NeedSerializer(need)
+    return JsonResponse(serializer.data, safe=False)
+
+@csrf_exempt
+def client_need(request, client_id, pk):
+  # GET returns the specific client need
+  if request.method == 'POST': # POST updates the specified need
+    body_unicode = request.body.decode('utf-8')
+    params = loads(body_unicode)
+      
+    need = Need.objects.filter(client_id = client_id, pk=pk).first()
+    need.type=params['need_type']
+    need.requirements=params['requirements']
+    need.save()
+    serializer = NeedSerializer(need)
+    return JsonResponse(serializer.data, safe=False)
+
+# need = Need.objects.filter(client_id = client_id, pk=pk)
+# if need:
+#   return HttpResponse("<h5>if</h5>")
+
+# data = JSONParser().parse(request
+# serializer = NeedSerializer(data=data)
+
+# if serializer.is_valid():
+#     serializer.save()
+#     return JsonResponse(serializer.data, status=201)
+# return JsonResponse(serializer.errors, status=400)
 
 # @csrf_exempt
 # def resources(request):
@@ -48,10 +82,10 @@ def client(request, pk):
 #       serializer = ResourceSerializer(resources, many=True)
 #       return JsonResponse(serializer.data, safe=False)
 
-    # elif request.method == 'POST':
-    #     data = JSONParser().parse(request)
-    #     serializer = ResourceSerializer(data=data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return JsonResponse(serializer.data, status=201)
-    #     return JsonResponse(serializer.errors, status=400)
+# elif request.method == 'POST':
+#     data = JSONParser().parse(request)
+#     serializer = ResourceSerializer(data=data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return JsonResponse(serializer.data, status=201)
+#     return JsonResponse(serializer.errors, status=400)
