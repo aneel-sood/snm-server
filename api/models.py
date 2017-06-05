@@ -21,3 +21,11 @@ class Need(models.Model):
   requirements = JSONField(default=dict)
   status = models.CharField(max_length=20)
   client = models.ForeignKey(Client, related_name='needs', on_delete=models.CASCADE)
+  resources = models.ManyToManyField(Resource, through='ResourceBookmark')
+
+class ResourceBookmark(models.Model):
+  need = models.ForeignKey(Need, on_delete=models.CASCADE)
+  resource = models.ForeignKey(Resource, on_delete=models.CASCADE)
+  fulfilled = models.BooleanField(default=False)
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
