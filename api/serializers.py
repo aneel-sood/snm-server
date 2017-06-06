@@ -20,5 +20,13 @@ class NeedSerializer(serializers.ModelSerializer):
 class ClientSerializer(serializers.ModelSerializer):
   needs = NeedSerializer(many=True)
   class Meta:
-    model = Provider
+    model = Client
     fields = ('id', 'first_name', 'last_name', 'email', 'needs')
+
+class DashboardClientSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Client
+    fields = (
+      'id', 'first_name', 'last_name', 'fulfilled_needs_count', 
+      'pending_needs_count', 'latest_resource_bookmark_datetime'
+    )

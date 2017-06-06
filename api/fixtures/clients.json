@@ -9,18 +9,6 @@
     }
   },
   {
-    "model": "api.need",
-    "fields": {
-      "type": "interpreter",
-      "requirements": {
-        "source_lang": "AR",
-        "target_lang": "EN",
-        "professional": false
-      },
-      "client": 1
-    }
-  },
-  {
     "model": "api.client",
     "pk": 2,
     "fields": {
@@ -30,13 +18,75 @@
     }
   },
   {
-    "model": "api.need",
+    "model": "api.client",
+    "pk": 3,
     "fields": {
-      "type": "dentist",
-      "requirements": {
-        "language_of_service": "GK"
-      },
-      "client": 2
+      "first_name": "Agha",
+      "last_name": "Khan",
+      "email": "khan@ismiali.org"
+    }
+  },
+  {
+    "model": "api.client",
+    "pk": 4,
+    "fields": {
+      "first_name": "Muhammad",
+      "last_name": "Murywed",
+      "email": "mnm@gmail.com"
+    }
+  },
+  {
+    "model": "api.client",
+    "pk": 5,
+    "fields": {
+      "first_name": "Niloufar",
+      "last_name": "Hassani",
+      "email": "nili@soa.com"
+    }
+  },
+  {
+    "model": "api.client",
+    "pk": 6,
+    "fields": {
+      "first_name": "Aaron",
+      "last_name": "Aba",
+      "email": "aaa@utoronto.ca"
+    }
+  },
+  {
+    "model": "api.client",
+    "pk": 7,
+    "fields": {
+      "first_name": "Genevieve",
+      "last_name": "Absolutment",
+      "email": "genie@hotmail.com"
+    }
+  },
+  {
+    "model": "api.client",
+    "pk": 8,
+    "fields": {
+      "first_name": "Voytek",
+      "last_name": "Iwasack",
+      "email": "halen_fan@pol.com"
+    }
+  },
+  {
+    "model": "api.client",
+    "pk": 9,
+    "fields": {
+      "first_name": "Franz",
+      "last_name": "Kafka",
+      "email": "josef@k.cz"
+    }
+  },
+  {
+    "model": "api.client",
+    "pk": 10,
+    "fields": {
+      "first_name": "Annette",
+      "last_name": "Funicello",
+      "email": "funny@cello.it"
     }
   }
 ]

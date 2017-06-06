@@ -29,6 +29,13 @@ def clients(request):
     return JsonResponse(serializer.data, safe=False)
 
 @csrf_exempt
+def dashboard_clients(request):
+  if request.method == 'GET':
+    clients = Client.objects.all()
+    serializer = DashboardClientSerializer(clients, many=True)
+    return JsonResponse(serializer.data, safe=False)
+
+@csrf_exempt
 def client(request, pk):
   if request.method == 'GET':
     client = Client.objects.get(pk=pk)
