@@ -34,7 +34,6 @@ class Client(models.Model):
 class Need(models.Model):
   type = models.CharField(max_length=50)
   requirements = JSONField(default=dict)
-  status = models.CharField(max_length=20)
   client = models.ForeignKey(Client, related_name='needs', on_delete=models.CASCADE)
   resources = models.ManyToManyField(Resource, through='NeedResourceMatch')
 
