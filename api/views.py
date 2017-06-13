@@ -47,7 +47,7 @@ def client_needs(request, client_id):
   # GET returns all needs for the specified Client
   if request.method == 'POST': # POST creates a new need for the specified Client   
     need = Need.objects.create(client_id=client_id)
-    serializer = NeedSerializer(need)
+    serializer = NeedResourceMatchStatusSerializer(need)
     return JsonResponse(serializer.data, safe=False)
 
 @csrf_exempt
@@ -61,7 +61,7 @@ def client_need(request, client_id, pk):
     need.type=params['need_type']
     need.requirements=params['requirements']
     need.save()
-    serializer = NeedSerializer(need)
+    serializer = NeedResourceMatchStatusSerializer(need)
     return JsonResponse(serializer.data, safe=False)
 
   elif request.method == 'DELETE':
