@@ -47,13 +47,13 @@ def client_needs(request, client_id):
   # GET returns all needs for the specified Client
   if request.method == 'POST': # POST creates a new need for the specified Client   
     need = Need.objects.create(client_id=client_id)
-    serializer = NeedSerializer(need)
+    serializer = NeedResourceMatchStatusSerializer(need)
     return JsonResponse(serializer.data, safe=False)
 
 @csrf_exempt
 def client_need(request, client_id, pk):
   # GET returns the specific client need
-  if request.method == 'PUT': # POST updates the specified need
+  if request.method == 'PUT': 
     body_unicode = request.body.decode('utf-8')
     params = loads(body_unicode)
       
@@ -61,12 +61,24 @@ def client_need(request, client_id, pk):
     need.type=params['need_type']
     need.requirements=params['requirements']
     need.save()
-    serializer = NeedSerializer(need)
+    serializer = NeedResourceMatchStatusSerializer(need)
     return JsonResponse(serializer.data, safe=False)
 
   elif request.method == 'DELETE':
     need = Need.objects.filter(client_id = client_id, pk=pk).first()
     need.delete()
+    return JsonResponse({}, status=200)
+
+@csrf_exempt
+def need_resource(request, need_id, pk):
+  if request.method == 'POST':
+    body_unicode = request.body.decode('utf-8')
+    params = loads(body_unicode)
+
+    need = Need.objects.get(pk=need_id)
+    resource = Resource.objects.get(pk=pk)
+    bookmark = ResourceBookmark(need = need, resource = resource, fulfilled = params['fulfilled'])  
+    bookmark.save()    
     return JsonResponse({}, status=200)
 
 # need = Need.objects.filter(client_id = client_id, pk=pk)

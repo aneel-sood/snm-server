@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Provider, Resource, Client, Need
+from api.models import Provider, Resource, Client, Need, NeedResourceMatch
 
 class ResourceSerializer(serializers.ModelSerializer):
   class Meta:
@@ -15,10 +15,22 @@ class ProviderSerializer(serializers.ModelSerializer):
 class NeedSerializer(serializers.ModelSerializer):
   class Meta:
       model = Need
-      fields = ('id', 'type', 'requirements', 'status')
+      fields = ('id', 'type', 'requirements')
+
+class ResourceMatchStatusSerializer(serializers.ModelSerializer):
+  resource = ResourceSerializer()
+  class Meta: 
+    model = NeedResourceMatch
+    fields = ('pending', 'fulfilled', 'resource')
+
+class NeedResourceMatchStatusSerializer(serializers.ModelSerializer):
+  resources = ResourceMatchStatusSerializer(source='needresourcematch_set', many=True)
+  class Meta:
+      model = Need
+      fields = ('id', 'type', 'requirements', 'resources')
 
 class ClientSerializer(serializers.ModelSerializer):
-  needs = NeedSerializer(many=True)
+  needs = NeedResourceMatchStatusSerializer(many=True)
   class Meta:
     model = Client
     fields = ('id', 'first_name', 'last_name', 'email', 'needs')
