@@ -71,14 +71,13 @@ def client_need(request, client_id, pk):
 
 @csrf_exempt
 def need_resource(request, need_id, pk):
-  if request.method == 'POST':
+  if request.method == 'POST': # create NeedResourceMatch or update if one already exists for need / resource combination
     body_unicode = request.body.decode('utf-8')
     params = loads(body_unicode)
 
-    need = Need.objects.get(pk=need_id)
-    resource = Resource.objects.get(pk=pk)
-    bookmark = ResourceBookmark(need = need, resource = resource, fulfilled = params['fulfilled'])  
-    bookmark.save()    
+    NeedResourceMatch.objects.update_or_create(need_id = need_id, resource_id = pk,
+      defaults={'pending': params['pending'], 'fulfilled': params['fulfilled']})
+    
     return JsonResponse({}, status=200)
 
 # need = Need.objects.filter(client_id = client_id, pk=pk)
