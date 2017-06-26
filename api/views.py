@@ -78,7 +78,9 @@ def need_resource(request, need_id, pk):
     NeedResourceMatch.objects.update_or_create(need_id = need_id, resource_id = pk,
       defaults={'pending': params['pending'], 'fulfilled': params['fulfilled']})
     
-    return JsonResponse({}, status=200)
+    need = Need.objects.get(pk=need_id)
+    serializer = NeedResourceMatchStatusSerializer(need)
+    return JsonResponse(serializer.data, safe=False)
 
 # need = Need.objects.filter(client_id = client_id, pk=pk)
 # if need:
