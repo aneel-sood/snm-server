@@ -6,16 +6,22 @@ class Provider(models.Model):
   first_name = models.CharField(max_length=30)
   last_name = models.CharField(max_length=60)
   email = models.CharField(max_length=100)
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
 
 class Resource(models.Model):
   type = models.CharField(max_length=50)
   details = JSONField(default=dict)
   provider = models.ForeignKey(Provider, related_name='resources', on_delete=models.CASCADE)
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
 
 class Client(models.Model):
   first_name = models.CharField(max_length=30)
   last_name = models.CharField(max_length=60)
   email = models.CharField(max_length=100)
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
 
   def fulfilled_needs_count(self):
     return self.needs.filter(needresourcematch__fulfilled = True).count()
@@ -36,6 +42,8 @@ class Need(models.Model):
   requirements = JSONField(default=dict)
   client = models.ForeignKey(Client, related_name='needs', on_delete=models.CASCADE)
   resources = models.ManyToManyField(Resource, through='NeedResourceMatch')
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
 
 class NeedResourceMatch(models.Model):
   need = models.ForeignKey(Need, on_delete=models.CASCADE)
