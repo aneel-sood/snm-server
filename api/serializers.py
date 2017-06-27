@@ -39,6 +39,7 @@ class DashboardClientSerializer(serializers.ModelSerializer):
   class Meta:
     model = Client
     fields = (
-      'id', 'first_name', 'last_name', 'fulfilled_needs_count', 
-      'pending_needs_count', 'latest_resource_bookmark_datetime'
+      'id', 'first_name', 'last_name', 'needs_without_matching_resources_count',
+      'needs_with_matching_resources_count', 'pending_needs_count', 
+      'fulfilled_needs_count', 'most_recent_match_activity_datetime'
     )
