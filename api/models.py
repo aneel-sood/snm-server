@@ -23,17 +23,23 @@ class Client(models.Model):
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
 
+  def needs_without_matching_resources_count(self):
+    return self.needs.annotate(num_resources=Count('resources')).exclude(num_resources__gt = 0).count()
+
+  def needs_with_matching_resources_count(self):
+    return self.needs.filter(needresourcematch__fulfilled = False, needresourcematch__pending = False).count()
+
+  def pending_needs_count(self):
+    return self.needs.filter(needresourcematch__pending = True).count()
+
   def fulfilled_needs_count(self):
     return self.needs.filter(needresourcematch__fulfilled = True).count()
 
-  def pending_needs_count(self):
-    return self.needs.exclude(needresourcematch__fulfilled = True).count()
-
-  def latest_resource_bookmark_datetime(self):
-    needs_with_bookmarked_resoureces = self.needs.annotate(num_resources=Count('resources')).exclude(num_resources = 0)
-    if needs_with_bookmarked_resoureces:
-      need_with_latest_bookmark = needs_with_bookmarked_resoureces.latest('needresourcematch__updated_at')
-      return need_with_latest_bookmark.needresourcematch_set.latest('updated_at').updated_at
+  def most_recent_match_activity_datetime(self):
+    needs_with_matched_resources = self.needs.annotate(num_resources=Count('resources')).exclude(num_resources = 0)
+    if needs_with_matched_resources:
+      need_with_most_recent_match_activity = needs_with_matched_resources.latest('needresourcematch__updated_at')
+      return need_with_most_recent_match_activity.needresourcematch_set.latest('updated_at').updated_at
     else:
       return None
 

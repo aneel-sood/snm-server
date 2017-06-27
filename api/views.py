@@ -6,6 +6,8 @@ from json import loads
 from api.models import *
 from api.serializers import *
 from django.db.models import Q
+from datetime import timedelta
+from django.utils import timezone
 
 @csrf_exempt
 def providers(request):
@@ -31,7 +33,8 @@ def clients(request):
 @csrf_exempt
 def dashboard_clients(request):
   if request.method == 'GET':
-    clients = Client.objects.all()
+    two_weeks_ago = timezone.now() - timedelta(weeks=2)
+    clients = Client.objects.filter(needs__needresourcematch__updated_at__gt = two_weeks_ago).distinct()
     serializer = DashboardClientSerializer(clients, many=True)
     return JsonResponse(serializer.data, safe=False)
 
