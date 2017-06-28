@@ -7,10 +7,21 @@ class ResourceSerializer(serializers.ModelSerializer):
       fields = ('id', 'type', 'details')
 
 class ProviderSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Provider
+    fields = ('id', 'first_name', 'last_name', 'email')
+
+class ProviderWithResourcesSerializer(serializers.ModelSerializer):
   resources = ResourceSerializer(many=True)
   class Meta:
     model = Provider
     fields = ('id', 'first_name', 'last_name', 'email', 'resources')
+
+class ResourceWithProviderSerializer(serializers.ModelSerializer):
+  provider = ProviderSerializer()
+  class Meta:
+    model = Resource
+    fields = ('id', 'type', 'details', 'provider')
 
 class NeedSerializer(serializers.ModelSerializer):
   class Meta:
@@ -18,7 +29,7 @@ class NeedSerializer(serializers.ModelSerializer):
       fields = ('id', 'type', 'requirements')
 
 class ResourceMatchStatusSerializer(serializers.ModelSerializer):
-  resource = ResourceSerializer()
+  resource = ResourceWithProviderSerializer()
   class Meta: 
     model = NeedResourceMatch
     fields = ('pending', 'fulfilled', 'resource')
