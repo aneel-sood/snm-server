@@ -20,7 +20,7 @@ def providers(request):
 
     providers = Provider.objects.filter(resources__type=params['resource_type']).filter(q_objects).distinct()
 
-    serializer = ProviderSerializer(providers, many=True)
+    serializer = ProviderWithResourcesSerializer(providers, many=True)
     return JsonResponse(serializer.data, safe=False)
 
 @csrf_exempt
