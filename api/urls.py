@@ -4,6 +4,7 @@ from api import views
 urlpatterns = [
     url(r'^providers/$', views.providers),
     url(r'^clients/$', views.clients),
+    url(r'^resources/$', views.resources),
     url(r'^dashboard/clients/$', views.dashboard_clients),
     url(r'^client/$', views.client),
     url(r'^client/(?P<pk>[0-9]+)/$', views.client),

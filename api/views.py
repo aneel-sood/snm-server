@@ -10,6 +10,14 @@ from datetime import timedelta
 from django.utils import timezone
 
 @csrf_exempt
+def resources(request):
+  if request.method == 'GET':
+    resources = Resource.objects.all()
+    serializer = ResourceWithProviderSerializer(resources, many=True)
+    return JsonResponse(serializer.data, safe=False)
+    
+
+@csrf_exempt
 def providers(request):
   if request.method == 'GET':
     params = loads(request.GET.get('params', '{}'))
