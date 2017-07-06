@@ -15,21 +15,54 @@ def resources(request):
     resources = Resource.objects.all()
     serializer = ResourceWithProviderSerializer(resources, many=True)
     return JsonResponse(serializer.data, safe=False)
+
+@csrf_exempt
+def resource(request, pk=None):
+  if request.method == 'GET':
+    resource = Resource.objects.get(pk=pk)
+
+  elif request.method == 'POST':
+    body_unicode = request.body.decode('utf-8')
+    params = loads(body_unicode)
+
+    resource = Resource.objects.create(type=params['type'], details=params['details'])
+
+  serializer = ResourceWithProviderSerializer(resource)
+  return JsonResponse(serializer.data, safe=False)
     
 
 @csrf_exempt
 def providers(request):
   if request.method == 'GET':
     params = loads(request.GET.get('params', '{}'))
-    
-    q_objects = Q()
-    for param_name, value in params['details'].items():
-      q_objects.add(Q(**{'{0}__{1}__{2}'.format('resources', 'details', param_name): value}), Q.AND)
 
-    providers = Provider.objects.filter(resources__type=params['resource_type']).filter(q_objects).distinct()
+    if params:
+      q_objects = Q()
+      for param_name, value in params['details'].items():
+        q_objects.add(Q(**{'{0}__{1}__{2}'.format('resources', 'details', param_name): value}), Q.AND)
 
-    serializer = ProviderWithResourcesSerializer(providers, many=True)
+      providers = Provider.objects.filter(resources__type=params['resource_type']).filter(q_objects).distinct()
+      serializer = ProviderWithResourcesSerializer(providers, many=True)
+
+    else: 
+      providers = Provider.objects.all()
+      serializer = ProviderSerializer(providers, many=True)
+
     return JsonResponse(serializer.data, safe=False)
+
+@csrf_exempt
+def provider(request, pk=None):
+  if request.method == 'GET':
+    provider = Provider.objects.get(pk=pk)
+
+  elif request.method == 'POST':
+    body_unicode = request.body.decode('utf-8')
+    params = loads(body_unicode)
+
+    provider = Provider.objects.create(first_name=params['first_name'], last_name=params['last_name'], email=params['email'])
+
+  serializer = ProviderSerializer(provider)
+  return JsonResponse(serializer.data, safe=False)
 
 @csrf_exempt
 def clients(request):
