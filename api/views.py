@@ -20,14 +20,16 @@ def resources(request):
 def resource(request, pk=None):
   if request.method == 'GET':
     resource = Resource.objects.get(pk=pk)
+    serializer = ResourceWithProviderSerializer(resource)
 
   elif request.method == 'POST':
     body_unicode = request.body.decode('utf-8')
     params = loads(body_unicode)
 
-    resource = Resource.objects.create(type=params['type'], details=params['details'])
+    resource = Resource.objects.create(provider_id=params['provider_id'], type=params['type'], 
+      details=params['details'])
+    serializer = ResourceSerializer(resource)
 
-  serializer = ResourceWithProviderSerializer(resource)
   return JsonResponse(serializer.data, safe=False)
     
 
