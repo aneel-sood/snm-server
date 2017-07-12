@@ -38,7 +38,7 @@ class NeedResourceMatchStatusSerializer(serializers.ModelSerializer):
   resources = ResourceMatchStatusSerializer(source='needresourcematch_set', many=True)
   class Meta:
       model = Need
-      fields = ('id', 'type', 'requirements', 'resources')
+      fields = ('id', 'type', 'requirements', 'created_at', 'resources')
 
 class ClientSerializer(serializers.ModelSerializer):
   needs = NeedResourceMatchStatusSerializer(many=True)
