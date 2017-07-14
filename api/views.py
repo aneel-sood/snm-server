@@ -85,15 +85,32 @@ def dashboard_clients(request):
 def client(request, pk=None):
   if request.method == 'GET':
     client = Client.objects.get(pk=pk)
+    serializer = ClientSerializer(client)
+    return JsonResponse(serializer.data, safe=False)
 
   elif request.method == 'POST':
     body_unicode = request.body.decode('utf-8')
     params = loads(body_unicode)
 
     client = Client.objects.create(first_name=params['first_name'], last_name=params['last_name'], email=params['email'])
+    serializer = ClientSerializer(client)
+    return JsonResponse(serializer.data, safe=False)
 
-  serializer = ClientSerializer(client)
-  return JsonResponse(serializer.data, safe=False)
+  elif request.method == 'PUT': 
+    body_unicode = request.body.decode('utf-8')
+    params = loads(body_unicode)
+      
+    client = Client.objects.filter(pk=pk)
+    client.update(**params)
+
+
+    serializer = ClientSerializer(client.first())
+    return JsonResponse(serializer.data, safe=False)
+
+  elif request.method == 'DELETE':
+    client = Client.objects.filter(pk=pk).first()
+    client.delete()
+    return JsonResponse({}, status=200)
 
 @csrf_exempt
 def client_needs(request, client_id):
