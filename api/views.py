@@ -56,15 +56,30 @@ def providers(request):
 def provider(request, pk=None):
   if request.method == 'GET':
     provider = Provider.objects.get(pk=pk)
+    serializer = ProviderSerializer(provider)
+    return JsonResponse(serializer.data, safe=False)
 
   elif request.method == 'POST':
     body_unicode = request.body.decode('utf-8')
     params = loads(body_unicode)
 
     provider = Provider.objects.create(first_name=params['first_name'], last_name=params['last_name'], email=params['email'])
+    serializer = ProviderSerializer(provider)
+    return JsonResponse(serializer.data, safe=False)
 
-  serializer = ProviderSerializer(provider)
-  return JsonResponse(serializer.data, safe=False)
+  elif request.method == 'PUT': 
+    body_unicode = request.body.decode('utf-8')
+    params = loads(body_unicode)
+      
+    provider = Provider.objects.filter(pk=pk)
+    provider.update(**params)
+    serializer = ProviderSerializer(provider.first())
+    return JsonResponse(serializer.data, safe=False)
+
+  elif request.method == 'DELETE':
+    provider = Provider.objects.filter(pk=pk).first()
+    provider.delete()
+    return JsonResponse({}, status=200)
 
 @csrf_exempt
 def clients(request):
@@ -102,8 +117,6 @@ def client(request, pk=None):
       
     client = Client.objects.filter(pk=pk)
     client.update(**params)
-
-
     serializer = ClientSerializer(client.first())
     return JsonResponse(serializer.data, safe=False)
 
