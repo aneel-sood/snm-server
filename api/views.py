@@ -21,6 +21,7 @@ def resource(request, pk=None):
   if request.method == 'GET':
     resource = Resource.objects.get(pk=pk)
     serializer = ResourceWithProviderSerializer(resource)
+    return JsonResponse(serializer.data, safe=False)
 
   elif request.method == 'POST':
     body_unicode = request.body.decode('utf-8')
@@ -29,9 +30,21 @@ def resource(request, pk=None):
     resource = Resource.objects.create(provider_id=params['provider_id'], type=params['type'], 
       details=params['details'])
     serializer = ResourceSerializer(resource)
+    return JsonResponse(serializer.data, safe=False)
 
-  return JsonResponse(serializer.data, safe=False)
-    
+  elif request.method == 'PUT': 
+    body_unicode = request.body.decode('utf-8')
+    params = loads(body_unicode)
+      
+    resource = Resource.objects.filter(pk=pk)
+    resource.update(**params)
+    serializer = ResourceSerializer(resource.first())
+    return JsonResponse(serializer.data, safe=False)
+
+  elif request.method == 'DELETE':
+    resource = Resource.objects.filter(pk=pk).first()
+    resource.delete()
+    return JsonResponse({}, status=200)
 
 @csrf_exempt
 def providers(request):
