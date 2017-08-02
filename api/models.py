@@ -1,4 +1,4 @@
-from django.db import models
+from django.contrib.gis.db import models
 from django.contrib.postgres.fields import JSONField
 from django.db.models import Count
 
@@ -58,3 +58,10 @@ class NeedResourceMatch(models.Model):
   pending = models.BooleanField(default=False)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
+
+class Location(models.Model):
+  address = models.CharField(max_length=60)
+  city = models.CharField(max_length=30)
+  province = models.CharField(max_length=30)
+  postal_code = models.CharField(max_length=30)
+  lat_long = models.PointField()
