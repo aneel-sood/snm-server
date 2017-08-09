@@ -3,10 +3,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db.models import Count
 
 class Location(models.Model):
-  address = models.CharField(max_length=60)
-  city = models.CharField(max_length=30)
-  province = models.CharField(max_length=30)
-  postal_code = models.CharField(max_length=30)
+  address = models.CharField(max_length=120)
   lng_lat = models.PointField()
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)

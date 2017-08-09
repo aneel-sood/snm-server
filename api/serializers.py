@@ -6,7 +6,7 @@ class LocatinSerializer(GeoFeatureModelSerializer):
   class Meta:
       model = Location
       geo_field = "lng_lat"
-      fields = ('id', 'city')
+      fields = ('id', 'address')
 
 class ResourceSerializer(serializers.ModelSerializer):
   class Meta:
