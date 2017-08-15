@@ -1,5 +1,12 @@
 from rest_framework import serializers
-from api.models import Provider, Resource, Client, Need, NeedResourceMatch
+from rest_framework_gis.serializers import GeoFeatureModelSerializer
+from api.models import Provider, Resource, Client, Need, NeedResourceMatch, Location
+
+class LocatinSerializer(GeoFeatureModelSerializer):
+  class Meta:
+      model = Location
+      geo_field = "lng_lat"
+      fields = ('id', 'address')
 
 class ResourceSerializer(serializers.ModelSerializer):
   class Meta:
@@ -42,9 +49,10 @@ class NeedResourceMatchStatusSerializer(serializers.ModelSerializer):
 
 class ClientSerializer(serializers.ModelSerializer):
   needs = NeedResourceMatchStatusSerializer(many=True)
+  location = LocatinSerializer()
   class Meta:
     model = Client
-    fields = ('id', 'first_name', 'last_name', 'email', 'needs')
+    fields = ('id', 'first_name', 'last_name', 'email', 'needs', 'location')
 
 class DashboardClientSerializer(serializers.ModelSerializer):
   class Meta:

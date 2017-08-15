@@ -119,8 +119,10 @@ def client(request, pk=None):
   elif request.method == 'POST':
     body_unicode = request.body.decode('utf-8')
     params = loads(body_unicode)
-
-    client = Client.objects.create(first_name=params['first_name'], last_name=params['last_name'], email=params['email'])
+    location_params = params['location']
+    
+    location = Location.objects.create(lng_lat=f"POINT({location_params['geoPoint']['lng']} {location_params['geoPoint']['lat']})", address=location_params['address'])
+    client = Client.objects.create(first_name=params['first_name'], last_name=params['last_name'], email=params['email'], location=location)
     serializer = ClientSerializer(client)
     return JsonResponse(serializer.data, safe=False)
 
