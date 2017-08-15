@@ -1,7 +1,9 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
+from rest_framework.views import APIView
+from rest_framework import status
 from json import loads
 from api.models import *
 from api.serializers import *
@@ -95,50 +97,12 @@ def provider(request, pk=None):
     return JsonResponse({}, status=200)
 
 @csrf_exempt
-def clients(request):
-  if request.method == 'GET':
-    clients = Client.objects.all()
-    serializer = ClientSerializer(clients, many=True)
-    return JsonResponse(serializer.data, safe=False)
-
-@csrf_exempt
 def dashboard_clients(request):
   if request.method == 'GET':
     two_weeks_ago = timezone.now() - timedelta(weeks=2)
     clients = Client.objects.filter(needs__needresourcematch__updated_at__gt = two_weeks_ago).distinct()
     serializer = DashboardClientSerializer(clients, many=True)
     return JsonResponse(serializer.data, safe=False)
-
-@csrf_exempt
-def client(request, pk=None):
-  if request.method == 'GET':
-    client = Client.objects.get(pk=pk)
-    serializer = ClientSerializer(client)
-    return JsonResponse(serializer.data, safe=False)
-
-  elif request.method == 'POST':
-    body_unicode = request.body.decode('utf-8')
-    params = loads(body_unicode)
-    location_params = params['location']
-    
-    location = Location.objects.create(lng_lat=f"POINT({location_params['geoPoint']['lng']} {location_params['geoPoint']['lat']})", address=location_params['address'])
-    client = Client.objects.create(first_name=params['first_name'], last_name=params['last_name'], email=params['email'], location=location)
-    serializer = ClientSerializer(client)
-    return JsonResponse(serializer.data, safe=False)
-
-  elif request.method == 'PUT': 
-    body_unicode = request.body.decode('utf-8')
-    params = loads(body_unicode)
-      
-    client = Client.objects.filter(pk=pk)
-    client.update(**params)
-    serializer = ClientSerializer(client.first())
-    return JsonResponse(serializer.data, safe=False)
-
-  elif request.method == 'DELETE':
-    client = Client.objects.filter(pk=pk).first()
-    client.delete()
-    return JsonResponse({}, status=200)
 
 @csrf_exempt
 def client_needs(request, client_id):
@@ -183,35 +147,42 @@ def need_resource(request, need_id, pk):
   serializer = NeedResourceMatchStatusSerializer(need)
   return JsonResponse(serializer.data, safe=False)
 
-# need = Need.objects.filter(client_id = client_id, pk=pk)
-# if need:
-#   return HttpResponse("<h5>if</h5>")
+class ClientDetail(APIView):
+  def get_object(self, pk):
+      try:
+        return Client.objects.get(pk=pk)
+      except Client.DoesNotExist:
+        raise Http404
 
-# data = JSONParser().parse(request
-# serializer = NeedSerializer(data=data)
+  def get(self, request, pk, format=None):
+    client = self.get_object(pk)
+    serializer = ClientSerializer(client)
+    return JsonResponse(serializer.data)
 
-# if serializer.is_valid():
-#     serializer.save()
-#     return JsonResponse(serializer.data, status=201)
-# return JsonResponse(serializer.errors, status=400)
+  def put(self, request, pk, format=None):
+    client = self.get_object(pk)
+    serializer = ClientSerializer(client, data=request.data)
+    if serializer.is_valid():
+      serializer.save()
+      return JsonResponse(serializer.data)
+    return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# @csrf_exempt
-# def resources(request):
-#     if request.method == 'GET':
-#       params = loads(request.GET.get('params', '{}'))
-      
-#       q_objects = Q()
-#       for param_name, value in params['details'].items():
-#         q_objects.add(Q(**{'{0}__{1}'.format('details', param_name): value}), Q.AND)
+  def delete(self, request, pk, format=None):
+    client = self.get_object(pk)
+    client.delete()
+    return JsonResponse(status=status.HTTP_204_NO_CONTENT)
 
-#       resources = Resource.objects.filter(type=params['type']).filter(q_objects)
-#       serializer = ResourceSerializer(resources, many=True)
-#       return JsonResponse(serializer.data, safe=False)
+class ClientList(APIView):
+  def get(self, request, format=None):
+    clients = Client.objects.all()
+    serializer = ClientSerializer(clients, many=True)
+    return JsonResponse(serializer.data, safe=False)
 
-# elif request.method == 'POST':
-#     data = JSONParser().parse(request)
-#     serializer = ResourceSerializer(data=data)
-#     if serializer.is_valid():
-#         serializer.save()
-#         return JsonResponse(serializer.data, status=201)
-#     return JsonResponse(serializer.errors, status=400)
+  def post(self, request, format=None):
+    serializer = ClientSerializer(data=request.data)
+
+    if serializer.is_valid():
+      serializer.save()
+      return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+    print(serializer.errors)
+    return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
