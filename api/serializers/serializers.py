@@ -2,16 +2,25 @@ from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 from api.models import Provider, Resource, Client, Need, NeedResourceMatch, Location
 
-class LocatinSerializer(GeoFeatureModelSerializer):
+class LocationSerializer(GeoFeatureModelSerializer):
   class Meta:
-      model = Location
-      geo_field = "lng_lat"
-      fields = ('id', 'address')
+    model = Location
+    geo_field = "lng_lat"
+    fields = ('id', 'address')
+
+  def create(self, validated_data):
+    return Location.objects.create(**validated_data)
+
+  def update(self, instance, validated_data):
+    instance.address = validated_data.get('address', instance.address)
+    instance.lng_lat = validated_data.get('lng_lat', instance.lng_lat)
+    instance.save()
+    return instance
 
 class ResourceSerializer(serializers.ModelSerializer):
   class Meta:
-      model = Resource
-      fields = ('id', 'type', 'details')
+    model = Resource
+    fields = ('id', 'type', 'details')
 
 class ProviderSerializer(serializers.ModelSerializer):
   class Meta:
@@ -46,13 +55,6 @@ class NeedResourceMatchStatusSerializer(serializers.ModelSerializer):
   class Meta:
       model = Need
       fields = ('id', 'type', 'requirements', 'created_at', 'resources')
-
-class ClientSerializer(serializers.ModelSerializer):
-  needs = NeedResourceMatchStatusSerializer(many=True)
-  location = LocatinSerializer()
-  class Meta:
-    model = Client
-    fields = ('id', 'first_name', 'last_name', 'email', 'needs', 'location')
 
 class DashboardClientSerializer(serializers.ModelSerializer):
   class Meta:
