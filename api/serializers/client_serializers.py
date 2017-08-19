@@ -8,7 +8,8 @@ class ClientSerializer(serializers.ModelSerializer):
   
   class Meta:
     model = Client
-    fields = ('id', 'first_name', 'last_name', 'email', 'needs', 'location')
+    fields = ('id', 'first_name', 'last_name', 'birthdate', 
+      'email', 'cell_phone', 'home_phone', 'needs', 'location')
 
   def create(self, validated_data):
     location = self.crupdate_location(validated_data.pop('location'))    
@@ -20,7 +21,10 @@ class ClientSerializer(serializers.ModelSerializer):
  
     instance.first_name = validated_data.get('first_name', instance.first_name)
     instance.last_name = validated_data.get('last_name', instance.last_name)
+    instance.birthdate = validated_data.get('birthdate', instance.birthdate)
     instance.email = validated_data.get('email', instance.email)
+    instance.cell_phone = validated_data.get('cell_phone', instance.cell_phone)
+    instance.home_phone = validated_data.get('home_phone', instance.home_phone)
     instance.location = location
     instance.save()
     
