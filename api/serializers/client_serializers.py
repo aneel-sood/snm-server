@@ -2,6 +2,14 @@ from rest_framework import serializers
 from api.models import Client
 from .serializers import NeedResourceMatchStatusSerializer, LocationSerializer
 
+class ClientCSVSerializer(serializers.ModelSerializer):
+  location = serializers.SlugRelatedField(slug_field='address', read_only=True)
+
+  class Meta:
+    model = Client
+    fields = ('id', 'first_name', 'last_name', 'birthdate', 
+      'email', 'cell_phone', 'home_phone', 'location')
+
 class ClientSerializer(serializers.ModelSerializer):
   needs = NeedResourceMatchStatusSerializer(many=True, read_only=True)
   location = LocationSerializer(allow_null=True)
