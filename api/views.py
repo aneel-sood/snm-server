@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework import status
 from json import loads
 from api.models import *
@@ -10,6 +11,7 @@ from api.serializers import *
 from django.db.models import Q
 from datetime import timedelta
 from django.utils import timezone
+from rest_framework_csv import renderers as csv_renderers
 
 @csrf_exempt
 def resources(request):
@@ -173,10 +175,23 @@ class ClientDetail(APIView):
     return JsonResponse(status=status.HTTP_204_NO_CONTENT)
 
 class ClientList(APIView):
+  renderer_classes = (csv_renderers.CSVRenderer, )
+
+  def get_renderer_context(self):
+    context = super().get_renderer_context()
+    context['header'] = ['id', 'first_name', 'last_name', 'birthdate', 
+      'email', 'cell_phone', 'home_phone', 'location']
+    context['labels'] = {'location': 'address'}
+    return context
+
   def get(self, request, format=None):
     clients = Client.objects.all()
-    serializer = ClientSerializer(clients, many=True)
-    return JsonResponse(serializer.data, safe=False)
+    if format == 'csv':
+      serializer = ClientCSVSerializer(clients, many=True)
+      return Response(serializer.data)
+    else:
+      serializer = ClientSerializer(clients, many=True)
+      return JsonResponse(serializer.data, safe=False)
 
   def post(self, request, format=None):
     serializer = ClientSerializer(data=request.data)
