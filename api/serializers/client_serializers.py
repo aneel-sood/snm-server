@@ -4,11 +4,15 @@ from .serializers import NeedResourceMatchStatusSerializer, LocationSerializer
 
 class ClientCSVSerializer(serializers.ModelSerializer):
   location = serializers.SlugRelatedField(slug_field='address', read_only=True)
+  most_recent_match_activity_datetime = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
 
   class Meta:
     model = Client
     fields = ('id', 'first_name', 'last_name', 'birthdate', 
-      'email', 'cell_phone', 'home_phone', 'location')
+      'email', 'cell_phone', 'home_phone', 'location', 
+      'needs_without_matching_resources_count',
+      'needs_with_matching_resources_count', 'pending_needs_count', 
+      'fulfilled_needs_count', 'most_recent_match_activity_datetime')
 
 class ClientSerializer(serializers.ModelSerializer):
   needs = NeedResourceMatchStatusSerializer(many=True, read_only=True)

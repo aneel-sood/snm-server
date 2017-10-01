@@ -150,6 +150,7 @@ def need_resource(request, need_id, pk):
   return JsonResponse(serializer.data, safe=False)
 
 class ClientDetail(APIView):
+
   def get_object(self, pk):
       try:
         return Client.objects.get(pk=pk)
@@ -180,7 +181,10 @@ class ClientList(APIView):
   def get_renderer_context(self):
     context = super().get_renderer_context()
     context['header'] = ['id', 'first_name', 'last_name', 'birthdate', 
-      'email', 'cell_phone', 'home_phone', 'location']
+      'email', 'cell_phone', 'home_phone', 'location', 
+      'needs_without_matching_resources_count',
+      'needs_with_matching_resources_count', 'pending_needs_count', 
+      'fulfilled_needs_count', 'most_recent_match_activity_datetime']
     context['labels'] = {'location': 'address'}
     return context
 
