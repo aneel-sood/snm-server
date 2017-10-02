@@ -61,6 +61,15 @@ class Need(models.Model):
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
 
+  def matching_resources_count(self):
+    return self.resources.count()
+
+  def pending_resources_count(self):
+    return self.needresourcematch_set.filter(pending = True).count()
+
+  def fulfilled_resources_count(self):
+    return self.needresourcematch_set.filter(fulfilled = True).count()
+
 class NeedResourceMatch(models.Model):
   need = models.ForeignKey(Need, on_delete=models.CASCADE)
   resource = models.ForeignKey(Resource, on_delete=models.CASCADE)
