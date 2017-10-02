@@ -19,4 +19,5 @@ urlpatterns = [
 
 urlpatterns = urlpatterns + format_suffix_patterns([
   url(r'^clients/$', views.ClientList.as_view()), 
+  url(r'^needs/$', views.NeedList.as_view()), 
 ], allowed=['csv',])

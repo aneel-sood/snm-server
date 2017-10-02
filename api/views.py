@@ -150,6 +150,7 @@ def need_resource(request, need_id, pk):
   return JsonResponse(serializer.data, safe=False)
 
 class ClientDetail(APIView):
+
   def get_object(self, pk):
       try:
         return Client.objects.get(pk=pk)
@@ -180,7 +181,10 @@ class ClientList(APIView):
   def get_renderer_context(self):
     context = super().get_renderer_context()
     context['header'] = ['id', 'first_name', 'last_name', 'birthdate', 
-      'email', 'cell_phone', 'home_phone', 'location']
+      'email', 'cell_phone', 'home_phone', 'location', 
+      'needs_without_matching_resources_count',
+      'needs_with_matching_resources_count', 'pending_needs_count', 
+      'fulfilled_needs_count', 'most_recent_match_activity_datetime']
     context['labels'] = {'location': 'address'}
     return context
 
@@ -201,3 +205,21 @@ class ClientList(APIView):
       return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
     print(serializer.errors)
     return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class NeedList(APIView):
+  renderer_classes = (csv_renderers.CSVRenderer, )
+
+  def get_renderer_context(self):
+    context = super().get_renderer_context()
+    context['header'] = ['client_id', 'type', 'matching_resources_count',
+      'pending_resources_count', 'fulfilled_resources_count', 'created_at']
+    return context
+
+  def get(self, request, format=None):
+    needs = Need.objects.all()
+    if format == 'csv':
+      serializer = NeedCSVSerializer(needs, many=True)
+      return Response(serializer.data)
+    else:
+      serializer = NeedSerializer(needs, many=True)
+      return JsonResponse(serializer.data, safe=False)
