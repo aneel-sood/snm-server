@@ -44,6 +44,14 @@ class NeedSerializer(serializers.ModelSerializer):
       model = Need
       fields = ('id', 'type', 'requirements')
 
+class NeedCSVSerializer(serializers.ModelSerializer):
+  created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+
+  class Meta:
+    model = Need
+    fields = ('client_id', 'type', 'created_at', 'matching_resources_count',
+                'pending_resources_count', 'fulfilled_resources_count')
+
 class ResourceMatchStatusSerializer(serializers.ModelSerializer):
   resource = ResourceWithProviderSerializer()
   class Meta: 
