@@ -205,3 +205,21 @@ class ClientList(APIView):
       return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
     print(serializer.errors)
     return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class NeedList(APIView):
+  renderer_classes = (csv_renderers.CSVRenderer, )
+
+  def get_renderer_context(self):
+    context = super().get_renderer_context()
+    context['header'] = ['client_id', 'type', 'matching_resources_count',
+      'pending_resources_count', 'fulfilled_resources_count', 'created_at']
+    return context
+
+  def get(self, request, format=None):
+    needs = Need.objects.all()
+    if format == 'csv':
+      serializer = NeedCSVSerializer(needs, many=True)
+      return Response(serializer.data)
+    else:
+      serializer = NeedSerializer(needs, many=True)
+      return JsonResponse(serializer.data, safe=False)
