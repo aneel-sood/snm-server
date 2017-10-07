@@ -216,12 +216,12 @@ class NeedList(APIView):
 
   def get_renderer_context(self):
     context = super().get_renderer_context()
-    context['header'] = ['client_id', 'type', 'matching_resources_count',
+    context['header'] = ['client_id', 'type', 'requirements', 'matching_resources_count',
       'pending_resources_count', 'fulfilled_resources_count', 'created_at']
     return context
 
   def get(self, request, format=None):
-    needs = Need.objects.all()
+    needs = Need.objects.order_by('client_id')
     if format == 'csv':
       serializer = NeedCSVSerializer(needs, many=True)
       return Response(serializer.data)
