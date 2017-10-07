@@ -2,6 +2,7 @@ from rest_framework import serializers
 from api.models import Client, Need
 from .location_serializers import LocationSerializer
 from .provider_serializers import NeedResourceMatchStatusSerializer
+import re
 
 class NeedSerializer(serializers.ModelSerializer):
   class Meta:
@@ -9,12 +10,18 @@ class NeedSerializer(serializers.ModelSerializer):
       fields = ('id', 'type', 'requirements')
 
 class NeedCSVSerializer(serializers.ModelSerializer):
+  requirements = serializers.CharField()
   created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
 
   class Meta:
     model = Need
-    fields = ('client_id', 'type', 'created_at', 'matching_resources_count',
+    fields = ('client_id', 'type', 'requirements', 'created_at', 'matching_resources_count',
                 'pending_resources_count', 'fulfilled_resources_count')
+
+  def to_representation(self, instance):
+    representation = super(NeedCSVSerializer, self).to_representation(instance)
+    representation['requirements'] = re.sub('[{}]', '', representation['requirements'])
+    return representation
 
 class ClientCSVSerializer(serializers.ModelSerializer):
   location = serializers.SlugRelatedField(slug_field='address', read_only=True)

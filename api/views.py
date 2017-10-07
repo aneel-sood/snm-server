@@ -154,7 +154,7 @@ class ClientList(APIView):
     return context
 
   def get(self, request, format=None):
-    clients = Client.objects.all()
+    clients = Client.objects.order_by('last_name', 'first_name')
     if format == 'csv':
       serializer = ClientCSVSerializer(clients, many=True)
       return Response(serializer.data)
@@ -198,7 +198,7 @@ class ProviderDetail(APIView):
 
 class ProviderList(APIView):
   def get(self, request, format=None):
-    providers = Provider.objects.all()
+    providers = Provider.objects.order_by('last_name', 'first_name')
     serializer = ProviderSerializer(providers, many=True)
     return JsonResponse(serializer.data, safe=False)
       
@@ -216,12 +216,12 @@ class NeedList(APIView):
 
   def get_renderer_context(self):
     context = super().get_renderer_context()
-    context['header'] = ['client_id', 'type', 'matching_resources_count',
+    context['header'] = ['client_id', 'type', 'requirements', 'matching_resources_count',
       'pending_resources_count', 'fulfilled_resources_count', 'created_at']
     return context
 
   def get(self, request, format=None):
-    needs = Need.objects.all()
+    needs = Need.objects.order_by('client_id')
     if format == 'csv':
       serializer = NeedCSVSerializer(needs, many=True)
       return Response(serializer.data)
