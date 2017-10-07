@@ -51,6 +51,19 @@ def resource(request, pk=None):
     return JsonResponse({}, status=200)
 
 @csrf_exempt
+def provider_resource_search(request):
+  params = loads(request.GET.get('params', '{}'))
+  q_objects = Q()
+
+  for param_name, value in params['details'].items():
+    q_objects.add(Q(**{'{0}__{1}__{2}'.format('resources', 'details', param_name): value}), Q.AND)
+
+  providers = Provider.objects.filter(resources__type=params['resource_type']).filter(q_objects).distinct()
+  serializer = ProviderWithResourcesSerializer(providers, many=True)
+
+  return JsonResponse(serializer.data, safe=False)
+
+@csrf_exempt
 def dashboard_clients(request):
   if request.method == 'GET':
     two_weeks_ago = timezone.now() - timedelta(weeks=2)
