@@ -12,6 +12,11 @@ class Provider(models.Model):
   first_name = models.CharField(max_length=30)
   last_name = models.CharField(max_length=60)
   email = models.CharField(max_length=100)
+  home_phone = models.CharField(max_length=15, blank=True, null=True)
+  cell_phone = models.CharField(max_length=15, blank=True, null=True)
+  notes = models.CharField(max_length=300, blank=True, null=True)
+  location = models.ForeignKey(Location, null=True, on_delete=models.CASCADE)
+  referrer = models.CharField(max_length=80, blank=True, null=True)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
 
@@ -25,11 +30,11 @@ class Resource(models.Model):
 class Client(models.Model):
   first_name = models.CharField(max_length=30)
   last_name = models.CharField(max_length=60)
-  birthdate = models.DateField(null=True)
   email = models.CharField(max_length=100)
   home_phone = models.CharField(max_length=15, blank=True, null=True)
   cell_phone = models.CharField(max_length=15, blank=True, null=True)
   location = models.ForeignKey(Location, null=True, on_delete=models.CASCADE)
+  birthdate = models.DateField(null=True)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
 

@@ -51,54 +51,6 @@ def resource(request, pk=None):
     return JsonResponse({}, status=200)
 
 @csrf_exempt
-def providers(request):
-  if request.method == 'GET':
-    params = loads(request.GET.get('params', '{}'))
-
-    if params:
-      q_objects = Q()
-      for param_name, value in params['details'].items():
-        q_objects.add(Q(**{'{0}__{1}__{2}'.format('resources', 'details', param_name): value}), Q.AND)
-
-      providers = Provider.objects.filter(resources__type=params['resource_type']).filter(q_objects).distinct()
-      serializer = ProviderWithResourcesSerializer(providers, many=True)
-
-    else: 
-      providers = Provider.objects.all()
-      serializer = ProviderSerializer(providers, many=True)
-
-    return JsonResponse(serializer.data, safe=False)
-
-@csrf_exempt
-def provider(request, pk=None):
-  if request.method == 'GET':
-    provider = Provider.objects.get(pk=pk)
-    serializer = ProviderSerializer(provider)
-    return JsonResponse(serializer.data, safe=False)
-
-  elif request.method == 'POST':
-    body_unicode = request.body.decode('utf-8')
-    params = loads(body_unicode)
-
-    provider = Provider.objects.create(first_name=params['first_name'], last_name=params['last_name'], email=params['email'])
-    serializer = ProviderSerializer(provider)
-    return JsonResponse(serializer.data, safe=False)
-
-  elif request.method == 'PUT': 
-    body_unicode = request.body.decode('utf-8')
-    params = loads(body_unicode)
-      
-    provider = Provider.objects.filter(pk=pk)
-    provider.update(**params)
-    serializer = ProviderSerializer(provider.first())
-    return JsonResponse(serializer.data, safe=False)
-
-  elif request.method == 'DELETE':
-    provider = Provider.objects.filter(pk=pk).first()
-    provider.delete()
-    return JsonResponse({}, status=200)
-
-@csrf_exempt
 def dashboard_clients(request):
   if request.method == 'GET':
     two_weeks_ago = timezone.now() - timedelta(weeks=2)
@@ -173,7 +125,7 @@ class ClientDetail(APIView):
   def delete(self, request, pk, format=None):
     client = self.get_object(pk)
     client.delete()
-    return JsonResponse(status=status.HTTP_204_NO_CONTENT)
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 class ClientList(APIView):
   renderer_classes = (csv_renderers.CSVRenderer, )
@@ -199,6 +151,46 @@ class ClientList(APIView):
 
   def post(self, request, format=None):
     serializer = ClientSerializer(data=request.data)
+
+    if serializer.is_valid():
+      serializer.save()
+      return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+    print(serializer.errors)
+    return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ProviderDetail(APIView):
+  def get_object(self, pk):
+      try:
+        return Provider.objects.get(pk=pk)
+      except Provider.DoesNotExist:
+        raise Http404
+
+  def get(self, request, pk, format=None):
+    provider = self.get_object(pk)
+    serializer = ProviderSerializer(provider)
+    return JsonResponse(serializer.data)
+
+  def put(self, request, pk, format=None):
+    provider = self.get_object(pk)
+    serializer = ProviderSerializer(provider, data=request.data)
+    if serializer.is_valid():
+      serializer.save()
+      return JsonResponse(serializer.data)
+    return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+  def delete(self, request, pk, format=None):
+    provider = self.get_object(pk)
+    provider.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+class ProviderList(APIView):
+  def get(self, request, format=None):
+    providers = Provider.objects.all()
+    serializer = ProviderSerializer(providers, many=True)
+    return JsonResponse(serializer.data, safe=False)
+      
+  def post(self, request, format=None):
+    serializer = ProviderSerializer(data=request.data)
 
     if serializer.is_valid():
       serializer.save()
